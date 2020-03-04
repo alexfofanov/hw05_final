@@ -18,11 +18,9 @@ class TestAddImageToPost(TestCase):
         self.group = Group.objects.create(title=self.group_name, slug=self.group_name)
         self.client.login(username=self.username, password=self.password)
         
-        # with open('/DATA/YP/Dev/Yatube/yatube/posts/test_img.jpg', 'rb') as fp:
         response = self.client.get('/')   
         with open('media/test_img.jpg', 'rb') as fp:
             response = self.client.post('/new/', {'group': self.group.id, 'text': self.text, 'image': fp})
-            #response = self.client.post('/new/', {'text': self.text, 'image': fp})
             self.assertRedirects(response, '/')
         self.post = Post.objects.get(text=self.text)    
 
@@ -51,7 +49,7 @@ class TestAddImageToPost(TestCase):
         with open('media/test_non_img.jpg', 'rb') as fp:
             response = self.client.post('/new/', {'group': self.group.id, 'text': self.text, 'image': fp})
         self.assertEqual(response.status_code, 200)
-        #self.assertFormError(response, 'New_postForm', 'image', '')    
+
     
     def test_caching_posts_on_index_page(self):
         # проверка работы кэша         
