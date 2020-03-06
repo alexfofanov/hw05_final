@@ -22,12 +22,12 @@ from django.conf.urls.static import static
 
 urlpatterns = [   
     # flatpages
-    path("about/", include("django.contrib.flatpages.urls")),
+    path('about/', include('django.contrib.flatpages.urls')),
     # регистрация и авторизация
     path('auth/', include('users.urls')),
     # если нужного шаблона для /auth не нашлось в файле users.urls — 
     # ищем совпадения в файле django.contrib.auth.urls
-    path("auth/", include("django.contrib.auth.urls")),
+    path('auth/', include('django.contrib.auth.urls')),
     # раздел администратора
     path('admin/', admin.site.urls),
     path('', include('posts.urls')), # импорт правил из приложения posts
@@ -39,8 +39,8 @@ urlpatterns += [
         path('terms/', views.flatpage, {'url': '/terms/'}, name='terms'),
 ]
 
-handler404 = "posts.views.page_not_found" # noqa
-handler500 = "posts.views.server_error" # noqa
+handler404 = 'posts.views.page_not_found' # noqa
+handler500 = 'posts.views.server_error' # noqa
 
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

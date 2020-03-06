@@ -8,7 +8,7 @@ from django.views.decorators.cache import cache_page
 
 
 def index(request):    
-    post_list = Post.objects.select_related('author', 'group').order_by("-pub_date").all()
+    post_list = Post.objects.select_related('author', 'group').order_by('-pub_date').all()
     paginator = Paginator(post_list, 10) # показывать по 10 записей на странице.
     page_number = request.GET.get('page') # переменная в URL с номером запрошенной страницы
     page = paginator.get_page(page_number) # получить записи с нужным смещением
@@ -47,7 +47,7 @@ def profile(request, username):
     post_count = Post.objects.filter(author=author).count()    
     following_count = Follow.objects.filter(user=author).count()
 
-    post_list = Post.objects.select_related('author', 'group').order_by("-pub_date").filter(author=author)       
+    post_list = Post.objects.select_related('author', 'group').order_by('-pub_date').filter(author=author)       
     paginator = Paginator(post_list, 10) # показывать по 10 записей на странице.
     page_number = request.GET.get('page') # переменная в URL с номером запрошенной страницы
     page = paginator.get_page(page_number) # получить записи с нужным смещением
@@ -57,21 +57,21 @@ def profile(request, username):
         if Follow.objects.filter(user=request.user, author=User.objects.get(username=username)).exists():
             following_status = True
 
-    return render(request, "profile.html", {'page': page, 'paginator': paginator,
+    return render(request, 'profile.html', {'page': page, 'paginator': paginator,
          'author': author, 'post_count': post_count, 'username': username, 'following_status': following_status,
          'folower_count': folower_count, 'following_count': following_count})
 
 
 def post_view(request, username, post_id):
-    author = User.objects.get(username=username)
+    author = get_object_or_404(User, username=username)
     posts_count = Post.objects.filter(author=author).count()
     folower_count = Follow.objects.filter(author=author).count()
     following_count = Follow.objects.filter(user=author).count()    
     items = Comment.objects.select_related('post', 'author').filter(post=post_id)
     
-    post = Post.objects.get(id=post_id)
+    post = get_object_or_404(Post, id=post_id)
     form = CommentForm()
-    return render(request, "post.html", 
+    return render(request, 'post.html', 
         {'post': post, 'author': author, 'folower_count': folower_count, 'following_count': following_count, 'posts_count': posts_count,
              'username': username, 'form': form, 'items': items})
 
@@ -118,24 +118,24 @@ def post_delete(request, username, post_id):
             post.delete()
             return redirect('/')
         form = New_postForm(instance=post)    
-        return render(request, "new_post.html", {'form': form, 'title': 'Удалить запись', 'button_name': 'Удалить'})        
+        return render(request, 'new_post.html', {'form': form, 'title': 'Удалить запись', 'button_name': 'Удалить'})        
     else:
         return redirect(f'/{username}/{post_id}')
 
 
 @login_required
 def follow_index(request):
-    follow_records = Follow.objects.filter(user=request.user)
+    follow_records = Follow.objects.filter(user=request.user).select_related('author')
     follow_authors = []
     for follow in follow_records:
         follow_authors.append(follow.author)
     
-    post_list = Post.objects.select_related('author', 'group').filter(author__in=follow_authors).order_by("-pub_date").all()
+    post_list = Post.objects.select_related('author', 'group').filter(author__in=follow_authors).order_by('-pub_date').all()
     paginator = Paginator(post_list, 10) # показывать по 10 записей на странице.
     page_number = request.GET.get('page') # переменная в URL с номером запрошенной страницы
     page = paginator.get_page(page_number) # получить записи с нужным смещением
 
-    return render(request, "follow.html", {'page': page, 'paginator': paginator})
+    return render(request, 'follow.html', {'page': page, 'paginator': paginator})
 
 
 @login_required
@@ -149,7 +149,8 @@ def profile_follow(request, username):
 
 @login_required
 def profile_unfollow(request, username):
-    Follow.objects.filter(user=request.user, author=User.objects.get(username=username)).delete()
+    author = get_object_or_404(User, username=username)
+    Follow.objects.filter(user=request.user, author=author).delete()
     
     return redirect('profile', username)
 
@@ -157,8 +158,8 @@ def profile_unfollow(request, username):
 def page_not_found(request, exception):
     # Переменная exception содержит отладочную информацию, 
     # выводить её в шаблон пользователской страницы 404 мы не станем
-    return render(request, "misc/404.html", {"path": request.path}, status=404)
+    return render(request, 'misc/404.html', {'path': request.path}, status=404)
 
 
 def server_error(request):
-    return render(request, "misc/500.html", status=500)
+    return render(request, 'misc/500.html', status=500)

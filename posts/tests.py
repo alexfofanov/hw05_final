@@ -6,7 +6,7 @@ from django.core.cache import cache
 
 
 class TestAddImageToPost(TestCase):
-    # Тестирование загрузки и отображения картинок    
+    # тестирование загрузки и отображения картинок    
     def setUp(self):
         self.username = 'test_user'
         self.password = '12345#$XccMz'
@@ -30,16 +30,20 @@ class TestAddImageToPost(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '<img ')   
         
-    def test_index_profile_group_img(self):
-        # проверяют, что на главной странице, на странице профайла и на странице группы пост с картинкой отображается корректно, с тегом <img>
+    def test_index_img(self):
+        # проверяют, что на главной странице пост с картинкой отображается корректно, с тегом <img>
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '<img ', status_code=200)
-        
+
+    def test_profile_img(self):   
+        # проверяют, что на странице профайла пост с картинкой отображается корректно, с тегом <img> 
         response = self.client.get(f'/{self.username}/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '<img ')
 
+    def test_group_img(self):
+        # проверяют, что на странице группы пост с картинкой отображается корректно, с тегом <img>
         response = self.client.get(f'/group/{self.group_name}/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '<img ')
@@ -50,7 +54,6 @@ class TestAddImageToPost(TestCase):
             response = self.client.post('/new/', {'group': self.group.id, 'text': self.text, 'image': fp})
         self.assertEqual(response.status_code, 200)
 
-    
     def test_caching_posts_on_index_page(self):
         # проверка работы кэша         
         response = self.client.get('/')  
@@ -58,8 +61,8 @@ class TestAddImageToPost(TestCase):
         cache.clear()
         response = self.client.get('/')
         self.assertContains(response, self.text)
-        
-  
+
+
 class TestUserScripts(TestCase):
     def setUp(self):
         self.client = Client()
@@ -72,6 +75,7 @@ class TestUserScripts(TestCase):
         self.post = Post.objects.create(author=self.user, text=self.text)
         self.client.login(username=self.username, password=self.password)
        
+
     def test_send_email(self):
         # Пользователь регистрируется и ему отправляется письмо с подтверждением регистрации
         mail.send_mail(
@@ -84,7 +88,7 @@ class TestUserScripts(TestCase):
 
     def test_create_proile(self):
         # После регистрации пользователя создается его персональная страница (profile)
-        response = self.client.get("/test_user/")
+        response = self.client.get('/test_user/')
         self.assertEqual(response.status_code, 200)
     
     def test_public_new_post(self):
@@ -95,31 +99,30 @@ class TestUserScripts(TestCase):
     def test_unauthorized_user_new_post(self):
         # Неавторизованный посетитель не может опубликовать пост (его редиректит на страницу входа)    
         self.client.logout()
-        response = self.client.get("/new/")
+        response = self.client.get('/new/')
         self.assertRedirects(response, '/auth/login/?next=/new/')
 
-    def test_check_new_post_place(self):
+    def test_new_post_publication_index(self):
         # После публикации поста новая запись появляется на главной странице сайта (index),
-        # на персональной странице пользователя (profile), и на отдельной странице поста (post)
         response = self.client.get('/')
         self.assertContains(response, self.text)
+
+    def test_new_post_publication_profile(self):
+        # После публикации поста новая запись появляется на персональной странице пользователя (profile)
         response = self.client.get(f'/{self.username}/')
         self.assertContains(response, self.text)
+
+    def test_new_post_publication_post_page(self):
+        # После публикации поста новая запись появляется на отдельной странице поста (post)        
         response = self.client.get(f'/{self.username}/{self.post.id}/')
-        self.assertContains(response, self.text)              
+        self.assertContains(response, self.text)    
     
     def test_edit_post(self):
-        # Авторизованный пользователь может отредактировать свой пост и его содержимое изменится на всех связанных страницах
-        response = self.client.get(f'/{self.username}/{self.post.id}/edit')
-        self.assertEqual(response.status_code, 200)
+        # Авторизованный пользователь может отредактировать свой пост и его содержимое изменится
         edited_text = 'Test post text (edited).'
-        self.post.text = edited_text
-        self.post.save()
+        with open('media/test_img.jpg', 'rb') as fp:
+            response = self.client.post(f'/{self.username}/{self.post.id}/edit/', {'text': edited_text, 'image': fp})
 
-        response = self.client.get('/')
-        self.assertContains(response, edited_text)
-        response = self.client.get(f'/{self.username}/')
-        self.assertContains(response, edited_text)
         response = self.client.get(f'/{self.username}/{self.post.id}/')
         self.assertContains(response, edited_text)
         
