@@ -15,7 +15,10 @@ __pycache__/
 *.sublime-workspace
 
 static/
-posts/static/
 media/
 
 db.sqlite3
+requirements_wn.txt
+setup.sh
+run.sh
+.env
