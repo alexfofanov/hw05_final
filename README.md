@@ -13,15 +13,17 @@
 
     git clone https://github.com/alexfofanov/hw05_final.git
 
-### 2. Создайте виртуальное окружение и установите зависимости
+### 2. Создайте виртуальное окружение активируйте и установите зависимости
     cd ./hw05_final
     python3 -m venv venv
+    source venv/bin/activate
     pip install -r requirements.txt
     
 
 ### 3. Создайте файл .env с переменными окружения в корне приложения и добавьте в него следующий параметр:
 
-    SECRET_KEY=pR(vp1)y(m0h2e86c01lm+$-72i#na)*i4e3$3@663re&_wx%4 # секретный ключ Django (установите свой)
+    SECRET_KEY=')=(vp1)y(m0h2e86c01lm+$-72i#na)*i4e3$3@663re&_wx%4' # секретный ключ Django (установите свой)
+
 
 ### 4. Выплните миграцию и соберите статику
 
