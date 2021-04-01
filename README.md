@@ -10,7 +10,6 @@
 ## Установка и запуск на примере Linux
 
 ### 1. Клонируйте репозиторий с помощью git
-
     git clone https://github.com/alexfofanov/hw05_final.git
 
 ### 2. Создайте виртуальное окружение активируйте и установите зависимости
@@ -21,29 +20,23 @@
     
 
 ### 3. Создайте файл .env с переменными окружения в корне приложения и добавьте в него следующий параметр:
-
     SECRET_KEY=')=(vp1)y(m0h2e86c01lm+$-72i#na)*i4e3$3@663re&_wx%4' # секретный ключ Django (установите свой)
 
 
 ### 4. Выплните миграцию и соберите статику
-
     python manage.py migrate
     python manage.py collectstatic
 
 ### 5. Создайте суперпользователя Django
     python manage.py createsuperuser
 
-
 ### 6. Запустите коммандой
-
     gunicorn --bind 0.0.0.0:80 yatube.wsgi --daemon
 
 Сервис доступен по адресу: http://localhost
 
 ### 7. Остановить коммандой
-
     pkill -f gunicorn
-
 
 ### Технологии:
 + Python  
@@ -51,5 +44,4 @@
 + SQLite  
 + Gunicorn  
 + WhiteNoise  
-+ GitHub  
-+ Actions  
++ GitHub Actions  
