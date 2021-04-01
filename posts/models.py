@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.urls import path
 
 User = get_user_model()
 
@@ -16,18 +15,32 @@ class Group(models.Model):
 
 class Post(models.Model):
     text = models.TextField()
-    pub_date = models.DateTimeField('date published', auto_now_add=True, db_index=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_posts')
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True, related_name='group_posts')
-    image = models.ImageField(upload_to='posts/') # поле для картинки 
+    pub_date = models.DateTimeField(
+        'date published', auto_now_add=True, db_index=True
+    )
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='author_posts'
+    )
+    group = models.ForeignKey(
+        Group,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='group_posts',
+    )
+    image = models.ImageField(upload_to='posts/')  # поле для картинки
 
     def __str__(self):
         return str(self.id)
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_comments')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_comments')
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name='post_comments'
+    )
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='author_comments'
+    )
     text = models.TextField()
     created = models.DateTimeField('date commented', auto_now_add=True)
 
@@ -35,10 +48,13 @@ class Comment(models.Model):
         return str(self.id)
 
 
-class Follow(models.Model):   
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
+class Follow(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='follower'
+    )
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='following'
+    )
 
     def __str__(self):
         return str(self.id)
-        

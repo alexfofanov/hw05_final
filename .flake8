@@ -2,4 +2,5 @@
 ignore = F811
 exclude =
    migrations,
+   tests,
    settings.py

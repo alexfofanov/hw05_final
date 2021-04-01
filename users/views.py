@@ -1,10 +1,8 @@
-from django.shortcuts import render
-# позволяет узнать ссылку на URL по его имени, параметр name функции path
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
-from .forms import CreationForm
-
 import datetime as dt
+
+from django.views.generic import CreateView
+
+from .forms import CreationForm
 
 
 class SignUp(CreateView):
@@ -16,7 +14,7 @@ class SignUp(CreateView):
 def year(request):
     today_date = dt.datetime.today()
     today_year = today_date.year
-    
+
     return {
         'year': today_year,
     }
