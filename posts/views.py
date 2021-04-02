@@ -1,8 +1,9 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, Group, User, Comment, Follow
-from .forms import New_postForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404, redirect, render
+
+from .forms import CommentForm, New_postForm
+from .models import Comment, Follow, Group, Post, User
 
 
 def index(request):

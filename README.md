@@ -1,4 +1,5 @@
 # Yatube (hw05_final)
+![foodgram-project](https://github.com/alexfofanov/hw05_final/workflows/yatube_workflow/badge.svg)
 Сервис для публикации личных дневников.
 
 Пользователь может зарегистрироваться и создать свою страницу, зайдя на котороую можно посмотреть все записи автора.

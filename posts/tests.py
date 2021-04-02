@@ -1,11 +1,14 @@
-from django.test import TestCase, Client
 from django.core import mail
-from .models import Post, Group, User
 from django.core.cache import cache
+from django.test import Client, TestCase
+
+from .models import Group, Post, User
 
 
 class TestAddImageToPost(TestCase):
-    # тестирование загрузки и отображения картинок
+    """
+    тестирование загрузки и отображения картинок
+    """
     def setUp(self):
         self.username = 'test_user'
         self.password = '12345#$XccMz'
