@@ -40,7 +40,7 @@
     pkill -f gunicorn
 
 ### Технологии:
-+ Python  
++ Python3  
 + Django  
 + SQLite  
 + Gunicorn  
