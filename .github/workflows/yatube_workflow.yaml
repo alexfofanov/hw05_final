@@ -21,3 +21,33 @@ jobs:
 
     - name: Lint with flake8
       run: flake8
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: tests
+
+    steps:
+      - name: executing remote ssh commands to deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~
+            rm -rf hw05_final
+            git clone https://alexfofanov:${{ secrets.ACCESS_TOKEN }}@github.com/alexfofanov/hw05_final.git
+            cd hw05_final
+
+#  send_message:
+#    runs-on: ubuntu-latest
+#    needs: deploy
+#
+#    steps:
+#      - name: send message
+#        uses: appleboy/telegram-action@master
+#        with:
+#          to: ${{ secrets.TELEGRAM_TO }}
+#          token: ${{ secrets.TELEGRAM_TOKEN }}
+#          message: ${{ github.workflow }} успешно выполнен!
+
