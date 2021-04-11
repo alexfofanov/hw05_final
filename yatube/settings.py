@@ -2,11 +2,13 @@ import os
 
 from dotenv import load_dotenv
 
+from django.core.management import utils
+
 load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", default=utils.get_random_secret_key())
 
 DEBUG = False
 
