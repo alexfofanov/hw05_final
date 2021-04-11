@@ -35,7 +35,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd ~
-            sudo pkill -f gunicorn
+            # sudo pkill -f gunicorn
             rm -rf hw05_final
             git clone https://alexfofanov:${{ secrets.ACCESS_TOKEN }}@github.com/alexfofanov/hw05_final.git
             # cd hw05_final
