@@ -38,13 +38,13 @@ jobs:
             # sudo pkill -f gunicorn
             rm -rf hw05_final
             git clone https://alexfofanov:${{ secrets.ACCESS_TOKEN }}@github.com/alexfofanov/hw05_final.git
-            # cd hw05_final
-            # python3 -m venv venv
-            # source venv/bin/activate
-            # pip3 install --quiet -r requirements.txt
-            # python3 manage.py migrate --noinput
-            # python3 manage.py collectstatic --noinput
-            # sudo ./venv/bin/gunicorn --bind 0.0.0.0:80 yatube.wsgi --daemon
+            cd hw05_final
+            python3 -m venv venv
+            source venv/bin/activate
+            pip3 install --quiet -r requirements.txt
+            python3 manage.py migrate --noinput
+            python3 manage.py collectstatic --noinput
+            sudo ./venv/bin/gunicorn --bind 0.0.0.0:80 yatube.wsgi --daemon
 
 #  send_message:
 #    runs-on: ubuntu-latest
